@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cctv_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - cctv_storage_data:/app/storage
+    environment:
+      - ENV=production
+      - DATABASE_URL=sqlite+aiosqlite:///./attendance.db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cctv_frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  cctv_storage_data:
